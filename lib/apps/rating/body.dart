@@ -19,8 +19,6 @@ class _TestBodyState extends State<TestBody> {
   int rating = 2;
     @override
   Widget build(BuildContext context) {
-      String dropdownValue = 'Free';
-
       var list = <Widget>[
         ListTile(
           leading: Icon(Icons.map),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:empty/apps/quiz/body.dart';
+import 'package:empty/apps/rating/body.dart';
 
-class Quiz extends StatelessWidget {
+class Rating extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
