@@ -1,5 +1,7 @@
+import 'package:empty/apps/quizTask/DTO/QuizDTO.dart';
+import 'package:empty/apps/quizTask/quiz.dart';
+import 'package:empty/apps/quizTask/result.dart';
 import 'package:flutter/material.dart';
-import './question.dart';
 
 class QuizTask extends StatefulWidget {
   @override
@@ -7,23 +9,48 @@ class QuizTask extends StatefulWidget {
 }
 
 class _QuizTaskState extends State<QuizTask> {
-  String answer = 'The question';
   int _questionIndex = 0;
+  int _totalScore = 0;
 
-  List<String> _questions = [
-    'First question',
-    'Second question'
+  final _questions = [
+    {
+      'question': 'First question',
+      'answers': [
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 5},
+        {'text': 'Blue', 'score': 3},
+      ]
+    },
+    {
+      'question': 'Second question',
+      'answers': [
+        {'text': 'Cat', 'score': 10},
+        {'text': 'Dog', 'score': 5},
+        {'text': 'Caw', 'score': 3},
+      ]
+    }
   ];
 
+  void _pressedHandler(int score) {
+    _totalScore += score;
 
-  void _pressedHandler(String answer) {
-    int newIndex = this._questionIndex + 1;
+    setState(() {
+      _questionIndex = _questionIndex + 1;
+    });
+  }
 
-    if (this._questions.asMap().containsKey(newIndex)) {
-      this._questionIndex += newIndex;
-    } else {
-      this._questionIndex = 0;
-    }
+  void resetHandler() {
+    setState(() {
+      _totalScore = 0;
+      _questionIndex = 0;
+    });
+  }
+
+  QuizDTO buildDTO() {
+    return QuizDTO(
+        _questions[_questionIndex]['question'],
+        _questions[_questionIndex]['answers']
+    );
   }
 
   @override
@@ -33,37 +60,14 @@ class _QuizTaskState extends State<QuizTask> {
         appBar: AppBar(
           title: Text('Quiz'),
         ),
-        body: Column(
-          children: <Widget>[
-            Question(
-                questionText: this._questions[this._questionIndex]
-            ),
-            RaisedButton(
-                child: Text('Answer 1'),
-                onPressed: () {
-                  setState(()  {
-                    this._pressedHandler('Answer 1');
-                  });
-                },
-            ),
-            RaisedButton(
-                child: Text('Answer 2'),
-                onPressed: () {
-                  setState(() {
-                    this._pressedHandler('Answer 2');
-                  });
-                },
-            ),
-            RaisedButton(
-                child: Text('Answer 3'),
-                onPressed: () {
-                  setState(() {
-                    this._pressedHandler('Answer 3');
-                  });
-                },
-            ),
-          ],
-        ),
+        body: () {
+          return _questionIndex < _questions.length
+              ? QuizBlock(
+                quizDTO: buildDTO(),
+                pressedHandler: _pressedHandler
+              )
+              : Result(resetHandler: resetHandler, totalScore: _totalScore);
+        }()
       ),
     );
   }
