@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:empty/apps/rating/body.dart';
+import 'package:playground/apps/rating/body.dart';
 
 class Rating extends StatelessWidget {
   @override

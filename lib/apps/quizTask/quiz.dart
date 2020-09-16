@@ -1,6 +1,6 @@
-import 'package:empty/apps/quizTask/DTO/QuizDTO.dart';
-import 'package:empty/apps/quizTask/answer.dart';
-import 'package:empty/apps/quizTask/question.dart';
+import 'package:playground/apps/quizTask/DTO/QuizDTO.dart';
+import 'package:playground/apps/quizTask/answer.dart';
+import 'package:playground/apps/quizTask/question.dart';
 import 'package:flutter/material.dart';
 
 class QuizBlock extends StatelessWidget {
