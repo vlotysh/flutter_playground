@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:playground/apps/expenses/entities/Transaction.dart';
+import 'package:intl/intl.dart';
 
 class TransactionCard extends StatelessWidget {
   final Transaction _transaction;
+  final Function _deleteHandler;
 
-  TransactionCard(this._transaction);
+  TransactionCard(this._transaction, this._deleteHandler);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,7 @@ class TransactionCard extends StatelessWidget {
         children: <Widget>[
           Container(
             child: Text(
-              _transaction.amount.toString(),
+              '\$ ${_transaction.amount}',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -38,10 +40,15 @@ class TransactionCard extends StatelessWidget {
                 ),
               ),
               Container(
-                  child: Text("${_transaction.date.year.toString()}"
-                      "-${_transaction.date.month.toString().padLeft(2, '0')}"
-                      "-${_transaction.date.day.toString().padLeft(2, '0')}"))
+                  child: Text(
+                    '${DateFormat('yyyy-MM-dd').format(_transaction.date)}'
+                  )
+              )
             ],
+          ),
+          FlatButton(
+            child: Icon(Icons.remove),
+            onPressed: () => _deleteHandler(_transaction.id),
           )
         ],
       ),
