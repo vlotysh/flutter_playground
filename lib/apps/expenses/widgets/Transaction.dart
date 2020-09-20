@@ -11,48 +11,34 @@ class TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Row(
-        children: <Widget>[
-          Container(
-            child: Text(
-              '\$ ${_transaction.amount}',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: Colors.red,
-              )
-            ),
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.red, width: 2)),
-            padding: EdgeInsets.all(10),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+      elevation: 6,
+      child: ListTile(
+        leading: CircleAvatar(
+            radius: 30,
+            child: Padding(
+              padding: EdgeInsets.all(5),
+              child: FittedBox(
                 child: Text(
-                  _transaction.title,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 35,
-                      color: Color.fromRGBO(60, 60, 60, 0.8)),
+                  '\$' + _transaction.amount.toStringAsFixed(2),
                 ),
               ),
-              Container(
-                  child: Text(
-                    '${DateFormat('yyyy-MM-dd').format(_transaction.date)}'
-                  )
-              )
-            ],
+            )),
+        title: Container(
+          child: Text(
+            _transaction.title,
+            style: Theme.of(context).textTheme.title,
           ),
-          FlatButton(
-            child: Icon(Icons.remove),
-            onPressed: () => _deleteHandler(_transaction.id),
-          )
-        ],
+        ),
+        subtitle: Container(
+            child:
+                Text('${DateFormat('yyyy-MM-dd').format(_transaction.date)}')),
+        trailing: IconButton(
+          icon: Icon(Icons.delete),
+          color: Theme.of(context).errorColor,
+          onPressed: () => _deleteHandler(_transaction.id),
+        ),
       ),
-      elevation: 0,
     );
   }
 }

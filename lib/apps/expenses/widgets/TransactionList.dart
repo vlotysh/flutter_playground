@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:playground/apps/expenses/entities/Transaction.dart';
 import 'package:playground/apps/expenses/widgets/Transaction.dart';
@@ -12,7 +14,7 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return transactions.length > 0
         ? Container(
-            height: 300,
+            height: 400,
             child: ListView.separated(
               shrinkWrap: true,
               padding: const EdgeInsets.all(20.0),
@@ -20,11 +22,20 @@ class TransactionList extends StatelessWidget {
               separatorBuilder: (BuildContext context, int index) =>
                   const Divider(),
               itemBuilder: (BuildContext context, int index) {
-                Transaction transaction = transactions[index];
-
-                return TransactionCard(transaction, removeTransaction);
+                return TransactionCard(transactions[index], removeTransaction);
               },
             ))
-        : Center(child: const Text('No transaction'));
+        : Column(
+            children: <Widget>[
+              Text('No transaction!'),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: 200,
+                child: Image.asset('assets/image/waiting.png', fit: BoxFit.cover),
+              )
+            ],
+    );
   }
 }
