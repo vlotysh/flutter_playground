@@ -10,6 +10,8 @@ class TransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
     return Card(
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
       elevation: 6,
@@ -33,11 +35,17 @@ class TransactionCard extends StatelessWidget {
         subtitle: Container(
             child:
                 Text('${DateFormat('yyyy-MM-dd').format(_transaction.date)}')),
-        trailing: IconButton(
-          icon: Icon(Icons.delete),
-          color: Theme.of(context).errorColor,
-          onPressed: () => _deleteHandler(_transaction.id),
-        ),
+        trailing: mediaQuery.size.width > 360
+            ? FlatButton.icon(
+                textColor: Theme.of(context).errorColor,
+                onPressed: () => _deleteHandler(_transaction.id),
+                icon: Icon(Icons.delete),
+                label: Text('Remove'))
+            : IconButton(
+                icon: Icon(Icons.delete),
+                color: Theme.of(context).errorColor,
+                onPressed: () => _deleteHandler(_transaction.id),
+              ),
       ),
     );
   }

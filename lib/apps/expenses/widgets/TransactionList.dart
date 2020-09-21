@@ -13,29 +13,32 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return transactions.length > 0
-        ? Container(
-            height: 400,
-            child: ListView.separated(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(20.0),
-              itemCount: transactions.length,
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(),
-              itemBuilder: (BuildContext context, int index) {
-                return TransactionCard(transactions[index], removeTransaction);
-              },
-            ))
-        : Column(
-            children: <Widget>[
-              Text('No transaction!'),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: 200,
-                child: Image.asset('assets/image/waiting.png', fit: BoxFit.cover),
-              )
-            ],
-    );
+        ? ListView.separated(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(20.0),
+            itemCount: transactions.length,
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(),
+            itemBuilder: (BuildContext context, int index) {
+              return TransactionCard(transactions[index], removeTransaction);
+            },
+          )
+        : LayoutBuilder(
+            builder: (ctx, constrains) {
+              return Column(
+                children: <Widget>[
+                  Text('No transaction!', style: Theme.of(context).textTheme.title),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: constrains.maxHeight * 0.6,
+                    child: Image.asset('assets/image/waiting.png',
+                        fit: BoxFit.cover),
+                  )
+                ],
+              );
+            },
+          );
   }
 }

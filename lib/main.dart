@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:playground/apps/default/Default.dart';
 import 'package:playground/apps/notification/Notification.dart' as prefix0;
 import 'package:playground/apps/tabs/TabBarDemo.dart';
@@ -7,4 +8,14 @@ import 'package:playground/apps/drugAndDrop/DragAndDrop.dart';
 import 'package:playground/apps/expenses/Expenses.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(Expenses());
+void main() {
+  /**
+   * Don't allow landascape mode
+   */
+ /* WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]); */
+  runApp(Expenses());
+}
