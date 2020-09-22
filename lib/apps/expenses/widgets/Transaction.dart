@@ -46,7 +46,7 @@ class TransactionCard extends StatelessWidget {
                 icon: Icon(Icons.delete),
                 label: Text('Remove'))
             : IconButton(
-                icon: Icon(Icons.delete),
+                icon: const Icon(Icons.delete),
                 color: Theme.of(context).errorColor,
                 onPressed: () => deleteHandler(transaction.id),
               ),
