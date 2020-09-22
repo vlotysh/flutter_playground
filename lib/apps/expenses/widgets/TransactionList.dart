@@ -20,8 +20,8 @@ class TransactionList extends StatelessWidget {
             separatorBuilder: (BuildContext context, int index) =>
                 const Divider(),
             itemBuilder: (BuildContext context, int index) {
-              return TransactionCard(transactions[index], removeTransaction);
-            },
+              return TransactionCard(transaction: transactions[index], deleteHandler: removeTransaction);
+            }
           )
         : LayoutBuilder(
             builder: (ctx, constrains) {
