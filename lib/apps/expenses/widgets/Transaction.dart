@@ -13,13 +13,13 @@ class TransactionCard extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context);
 
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
       elevation: 6,
       child: ListTile(
         leading: CircleAvatar(
             radius: 30,
             child: Padding(
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
               child: FittedBox(
                 child: Text(
                   '\$' + _transaction.amount.toStringAsFixed(2),

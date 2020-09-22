@@ -5,7 +5,7 @@ class ChartItem extends StatelessWidget {
   final double spedingAmount;
   final double spedingPctOfTotal;
 
-  ChartItem(this.lable, this.spedingAmount, this.spedingPctOfTotal);
+  const ChartItem(this.lable, this.spedingAmount, this.spedingPctOfTotal);
 
   @override
   Widget build(BuildContext context) {

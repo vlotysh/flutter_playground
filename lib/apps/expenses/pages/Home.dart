@@ -62,29 +62,32 @@ class _HomePageState extends State<HomePage> {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
 
-    final PreferredSizeWidget appBar = Platform.isIOS ? CupertinoNavigationBar(
-      middle: Text('Expanses'),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min, // get as need
-        children: <Widget>[
-          GestureDetector(
-            child: Icon(
-              CupertinoIcons.add
-            ),
-            onTap: () => startAddNewTransaction(context),
-        )],
-      ),
+    PreferredSizeWidget _buildAppBar () {
+      return Platform.isIOS ? CupertinoNavigationBar(
+        middle: const Text('Expanses'),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min, // get as need
+          children: <Widget>[
+            GestureDetector(
+              child: const Icon(
+                  CupertinoIcons.add
+              ),
+              onTap: () => startAddNewTransaction(context),
+            )],
+        ),
 
-    ) : AppBar(
-      title: Text('Expanses'),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () => startAddNewTransaction(context),
-        )
-      ],
-    );
+      ) : AppBar(
+        title: Text('Expanses'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => startAddNewTransaction(context),
+          )
+        ],
+      );
+    }
 
+    final PreferredSizeWidget appBar = _buildAppBar();
 
     final txListWidget = Container(
         height: (mediaQuery.size.height -
