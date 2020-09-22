@@ -22,16 +22,16 @@ class _CreateTransactionState extends State<CreateTransaction> {
 
   _submitData() {
     final enteredText = _titleController.text;
-    final enteredAmount = double.parse(
-        _amountController.text.isEmpty ? 0 : _amountController.text);
+    final enteredAmount = _amountController.text.isEmpty ? '0' : _amountController.text;
+    final formatedAmount = double.parse(enteredAmount);
 
-
-    if (enteredAmount <= 0 || enteredText.isEmpty || _selectedDate == null) {
+    if (formatedAmount <= 0 || enteredText.isEmpty || _selectedDate == null) {
+      showAlertDialog(context, 'Invalid data');
       return;
     }
 
     widget.createTransaction(
-        _titleController.text, enteredAmount, _selectedDate);
+        _titleController.text, formatedAmount, _selectedDate);
 
     Navigator.of(context).pop();
   }
@@ -60,6 +60,47 @@ class _CreateTransactionState extends State<CreateTransaction> {
     });
   }
 
+  showAlertDialog(BuildContext context, String text) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    Widget alert = Platform.isIOS
+        ? CupertinoAlertDialog(
+            title: Text("Info"),
+            content: Text(text),
+            actions: [
+              okButton,
+            ],
+          )
+        : AlertDialog(
+            title: Text("Info"),
+            content: Text(text),
+            actions: [
+              okButton,
+            ],
+          );
+
+    Platform.isIOS
+        ? showCupertinoDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          )
+        : showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
+  }
+
   _closeDatePicker() {
     setState(() {
       _showIOSDatePicker = false;
@@ -84,22 +125,22 @@ class _CreateTransactionState extends State<CreateTransaction> {
                   ? CupertinoTextField(
                       placeholder: 'title',
                       controller: _titleController,
-                // onSubmitted: (_) => _submitData(),
+                      // onSubmitted: (_) => _submitData(),
                     )
                   : TextField(
                       controller: _titleController,
                       decoration: InputDecoration(
                         labelText: 'Title',
                       ),
-                     // onSubmitted: (_) =>
-                     //     _submitData(), // _ underscore "I don't use arguments"
+                      // onSubmitted: (_) =>
+                      //     _submitData(), // _ underscore "I don't use arguments"
                     ),
               Platform.isIOS
                   ? CupertinoTextField(
                       placeholder: 'amount',
                       controller: _amountController,
                       keyboardType: TextInputType.number,
-                //  onSubmitted: (_) => _submitData(),
+                      //  onSubmitted: (_) => _submitData(),
                     )
                   : TextField(
                       controller: _amountController,
@@ -109,48 +150,53 @@ class _CreateTransactionState extends State<CreateTransaction> {
                       keyboardType: TextInputType.number,
                       onSubmitted: (_) => _submitData(),
                     ),
-              if (!_showIOSDatePicker) Container(
-                height: 70,
-                child: Row(
+              if (!_showIOSDatePicker)
+                Container(
+                  height: 70,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(_selectedDate == null
+                            ? 'No Date selected'
+                            : 'Selected Date: ${DateFormat.yMd().format(_selectedDate)}'),
+                      ),
+                      AdaptiveFlatButton('Chose date', _presentDatePicker)
+                    ],
+                  ),
+                ),
+              if (_showIOSDatePicker)
+                Column(
                   children: <Widget>[
-                    Expanded(
-                      child: Text(_selectedDate == null
-                          ? 'No Date selected'
-                          : 'Selected Date: ${DateFormat.yMd().format(_selectedDate)}'),
+                    Container(
+                      height: MediaQuery.of(context).copyWith().size.height / 3,
+                      child: CupertinoDatePicker(
+                        minimumDate: DateTime(2019),
+                        maximumDate: DateTime(2100),
+                        initialDateTime: _selectedDate == null
+                            ? DateTime.now()
+                            : _selectedDate,
+                        onDateTimeChanged: (DateTime date) {
+                          if (date == null) {
+                            return;
+                          }
+
+                          setState(() {
+                            _selectedDate = date;
+                          });
+                        },
+                      ),
                     ),
-                    AdaptiveFlatButton('Chose date', _presentDatePicker)
+                    AdaptiveFlatButton('Close date picker', _closeDatePicker)
                   ],
                 ),
-              ),
-              if (_showIOSDatePicker) Column(
-                children: <Widget>[
-                  Container(
-                    height: MediaQuery.of(context).copyWith().size.height / 3,
-                    child: CupertinoDatePicker(
-                      minimumDate: DateTime(2019),
-                      maximumDate: DateTime(2100),
-                      initialDateTime:
-                      _selectedDate == null ? DateTime.now() : _selectedDate,
-                      onDateTimeChanged: (DateTime date) {
-                        if (date == null) {
-                          return;
-                        }
-
-                        setState(() {
-                          _selectedDate = date;
-                        });
-                      },
-                    ),
-                  ),
-                  AdaptiveFlatButton('Close date picker', _closeDatePicker)
-                ],
-              ),
-              if (!_showIOSDatePicker) RaisedButton(
-                child: Text('Save'),
-                textColor: Theme.of(context).textTheme.button.color,
-                color: Theme.of(context).primaryColor,
-                onPressed: _submitData, // _ underscore "I don't use arguments"
-              )
+              if (!_showIOSDatePicker)
+                RaisedButton(
+                  child: Text('Save'),
+                  textColor: Theme.of(context).textTheme.button.color,
+                  color: Theme.of(context).primaryColor,
+                  onPressed:
+                      _submitData, // _ underscore "I don't use arguments"
+                )
             ],
           ),
         ),
