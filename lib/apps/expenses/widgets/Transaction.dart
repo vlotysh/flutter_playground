@@ -39,7 +39,7 @@ class TransactionCard extends StatelessWidget {
         subtitle: Container(
             child:
                 Text('${DateFormat('yyyy-MM-dd').format(transaction.date)}')),
-        trailing: mediaQuery.size.width > 360
+        trailing: mediaQuery.size.width > 360 // o
             ? FlatButton.icon(
                 textColor: Theme.of(context).errorColor,
                 onPressed: () => deleteHandler(transaction.id),

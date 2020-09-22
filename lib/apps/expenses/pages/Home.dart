@@ -57,42 +57,83 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+  List<Widget> _buildLandscapeContent(MediaQueryData mediaQuery,
+      PreferredSizeWidget appBar, Widget txListWidget) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text('Show chart', style: Theme.of(context).textTheme.title),
+          Switch.adaptive(
+              activeColor: Theme.of(context).accentColor,
+              value: _showChart,
+              onChanged: (value) {
+                setState(() {
+                  _showChart = value;
+                });
+              })
+        ],
+      ),
+      _showChart
+          ? Container(
+              height: (mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7,
+              child: Chart(_recentTransaction))
+          : txListWidget
+    ];
+  }
+
+  List<Widget> _buildPortraitContent(MediaQueryData mediaQuery,
+      PreferredSizeWidget appBar, Widget txListWidget) {
+    return [
+      Container(
+          height: (mediaQuery.size.height -
+                  appBar.preferredSize.height -
+                  mediaQuery.padding.top) *
+              0.3,
+          child: Chart(_recentTransaction)),
+      txListWidget
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
 
-    PreferredSizeWidget _buildAppBar () {
-      return Platform.isIOS ? CupertinoNavigationBar(
-        middle: const Text('Expanses'),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min, // get as need
-          children: <Widget>[
-            GestureDetector(
-              child: const Icon(
-                  CupertinoIcons.add
+    PreferredSizeWidget _buildAppBar() {
+      return Platform.isIOS
+          ? CupertinoNavigationBar(
+              middle: const Text('Expanses'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min, // get as need
+                children: <Widget>[
+                  GestureDetector(
+                    child: const Icon(CupertinoIcons.add),
+                    onTap: () => startAddNewTransaction(context),
+                  )
+                ],
               ),
-              onTap: () => startAddNewTransaction(context),
-            )],
-        ),
-
-      ) : AppBar(
-        title: Text('Expanses'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => startAddNewTransaction(context),
-          )
-        ],
-      );
+            )
+          : AppBar(
+              title: Text('Expanses'),
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () => startAddNewTransaction(context),
+                )
+              ],
+            );
     }
 
     final PreferredSizeWidget appBar = _buildAppBar();
 
     final txListWidget = Container(
         height: (mediaQuery.size.height -
-            appBar.preferredSize.height -
-            mediaQuery.padding.top) *
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
             0.7,
         child: TransactionList(_userTransactions, _removeTransaction));
 
@@ -102,59 +143,34 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Show chart', style: Theme.of(context).textTheme.title),
-                  Switch.adaptive(
-                      activeColor: Theme
-                          .of(context)
-                          .accentColor,
-                      value: _showChart,
-                      onChanged: (value) {
-                        setState(() {
-                          _showChart = value;
-                        });
-                      })
-                ],
-              ),
+              ..._buildLandscapeContent(mediaQuery, appBar, txListWidget),
             if (!isLandscape)
-              Container(
-                  height: (mediaQuery.size.height -
-                      appBar.preferredSize.height -
-                      mediaQuery.padding.top) *
-                      0.3,
-                  child: Chart(_recentTransaction)),
-            if (!isLandscape) txListWidget,
-            if (isLandscape)
-              _showChart
-                  ? Container(
-                  height: (mediaQuery.size.height -
-                      appBar.preferredSize.height -
-                      mediaQuery.padding.top) *
-                      0.7,
-                  child: Chart(_recentTransaction))
-                  : txListWidget,
+              ..._buildPortraitContent(mediaQuery, appBar, txListWidget),
           ],
         ),
       ),
     );
 
-    return Platform.isIOS ? CupertinoPageScaffold(
-      resizeToAvoidBottomInset: false, // fix keyboard indent
-      child: body,
-        navigationBar: appBar,
-    ) : Scaffold(
-        resizeToAvoidBottomInset: false, // fix keyboard indent
-        resizeToAvoidBottomPadding: false, //
-        appBar: appBar,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Platform.isIOS
-            ? Container()
-            : FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () => startAddNewTransaction(context),
-        ),
-        body: body);
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            resizeToAvoidBottomInset: false, // fix keyboard indent
+            child: body,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            resizeToAvoidBottomInset: false,
+            // fix keyboard indent
+            resizeToAvoidBottomPadding: false,
+            //
+            appBar: appBar,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    child: const Icon(Icons.add),
+                    onPressed: () => startAddNewTransaction(context),
+                  ),
+            body: body);
   }
 }
