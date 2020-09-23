@@ -20,13 +20,36 @@ class _CreateTransactionState extends State<CreateTransaction> {
   DateTime _selectedDate;
   bool _showIOSDatePicker = false;
 
+  @override
+  void initState() {
+    super.initState();
+
+    print('Init state()');
+    //This block can user for init some data form DB or API
+  }
+
+  @override
+  void didUpdateWidget(CreateTransaction oldWidget) {
+    print('didUpdateWidget()');
+    super.didUpdateWidget(oldWidget);
+    //check from old widget
+  }
+
+  @override
+  void dispose() {
+    //run on object destroy
+    //ex: clear listener
+    super.dispose();
+    print('dispose()');
+  }
+
   _submitData() {
     final enteredText = _titleController.text;
     final enteredAmount = _amountController.text.isEmpty ? '0' : _amountController.text;
     final formatedAmount = double.parse(enteredAmount);
 
     if (formatedAmount <= 0 || enteredText.isEmpty || _selectedDate == null) {
-      showAlertDialog(context, 'Invalid data');
+      //showAlertDialog(context, 'Invalid data');
       return;
     }
 
